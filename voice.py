@@ -65,7 +65,6 @@ class voice:
             print('NO  "festival", начало установки')
             call('sudo apt-get install festival festvox-ru', shell=True)
             call('clear')
-        print('Скорость синтеза можно регулировать в файле "/etc/festival.scm"\n(Parameter.set \'Audio_Command "aplay -q -c 1 -t raw -f s16 -r $SR $FILE")')
 
     def cycle_input(self):
 
@@ -87,21 +86,23 @@ class voice:
     def cyrillic_filter(self):
 
         """
-        удаляем символы латыни из строки
+        удаляем символы латыни из строки и тире (при переносах в книгах)
         :return text: отфильтрованное значение, введенное пользователем
         :type   text: text
         """
 
         self.text = sub(r'[^а-яёА-ЯЁ0-9\s]', '', self.text)
+        self.text = sub("^\s+|\n|\r|\s+$", '', self.text)
+
 
     def to_voice(self):
 
         """ озвучивание """
 
-        call('clear')
+        #call('clear')
         print('Чтение...')
         if self.text: call(['echo "%s" | festival --tts --language russian'%self.text], shell=True)
-        call('clear')
+        #call('clear')
 
 
 if __name__ == '__main__':
