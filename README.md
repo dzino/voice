@@ -3,10 +3,6 @@
 The voice synthesizer shell for Linux (software installation, speed setting, synthesizing).
 Russian language.
 
-----
-
-Оболочка синтезатора голоса для Linux (установка программы, настройка скорости, синтез).
-Русский язык.
 
 ## Examples
 
@@ -20,4 +16,6 @@ Russian language.
     
 **Start reading**
 
-    python3 voice.py
+    sudo python3 voice.py
+    
+Activation: select the text, press `ctrl+c`. Scrit can work in the background

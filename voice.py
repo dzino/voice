@@ -3,6 +3,9 @@
 from subprocess import call
 from re import sub
 from argparse import ArgumentParser
+from tkinter import Tk
+from imp import find_module
+from keyboard import add_hotkey, wait
 
 
 class voice:
@@ -53,12 +56,34 @@ class voice:
 
         """
         проверка наличия программы - нет, устанавливаем
+        :var  keyboard: глобал. горяч. клавиши
+        :type keyboard: str
+        :var  tkinter : получение данных из буфера обмена
+        :type tkinter : str
         :var  festival: программа синтезирования голоса
         :type festival: str
         """
 
         try:
-            print('Проверка наличия программы')
+            print('Проверка программы "keyboard"')
+            find_module('keyboard')
+            call('clear')
+        except OSError as e:
+            print('NO  "keyboard", начало установки')
+            call('pip3 install keyboard', shell=True)
+            call('clear')
+
+        try:
+            print('Проверка программы "tkinter"')
+            find_module('tkinter')
+            call('clear')
+        except OSError as e:
+            print('NO  "tkinter", начало установки')
+            call('sudo apt-get install python3-tk', shell=True)
+            call('clear')
+
+        try:
+            print('Проверка программы "festival"')
             call(['festival','-v'])
             call('clear')
         except OSError as e:
@@ -66,22 +91,47 @@ class voice:
             call('sudo apt-get install festival festvox-ru', shell=True)
             call('clear')
 
+    def hot_key(self):
+
+        """
+        прослушивание горячих клавиш
+        """
+
+        print('Горячие клавиши: ctrl+c')
+        add_hotkey('ctrl+c', self.cycle_input)
+        wait()
+
     def cycle_input(self):
 
         """
-        :param  cycle           : цикл интерфейса
-        :type   cycle           : bool
-        :param  text            : пользовательский текст для озвучки
-        :type   text            : text
-        :method cyrillic_filter : фильтрация латинских символов
-        :method to_voice        : синтез голоса
+        Цикл
+        :param  text           : текст из буфера обмена
+        :type   text           : text
+        :method cyrillic_filter: фильтрация латинских символов
+        :method to_voice       : синтез голоса
         """
 
-        cycle = True
-        while cycle:
-            self.text = input('Озвучить: ')
-            self.cyrillic_filter()
+        self.text = self.getClipboardData()
+        self.cyrillic_filter()
+        if isinstance(self.text, str):
+            print(self.text)
             self.to_voice()
+        else:
+            print('Не строка')
+
+    @staticmethod
+    def getClipboardData():
+
+        """
+        получение данных из буфера обмена
+        """
+
+        c = Tk()
+        c.withdraw()
+        clip = c.clipboard_get()
+        c.update()
+        c.destroy()
+        return clip
 
     def cyrillic_filter(self):
 
@@ -93,7 +143,6 @@ class voice:
 
         self.text = sub(r'[^а-яёА-ЯЁ0-9\s]', '', self.text)
         self.text = sub("^\s+|\n|\r|\s+$", '', self.text)
-
 
     def to_voice(self):
 
@@ -108,4 +157,4 @@ class voice:
 if __name__ == '__main__':
     obj = voice()
     obj.install_utility()
-    obj.cycle_input()
+    obj.hot_key()
