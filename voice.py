@@ -3,9 +3,7 @@
 from subprocess import call
 from re import sub
 from argparse import ArgumentParser
-from tkinter import Tk
 from imp import find_module
-from keyboard import add_hotkey, wait
 
 
 class voice:
@@ -68,16 +66,16 @@ class voice:
             print('Проверка программы "keyboard"')
             find_module('keyboard')
             call('clear')
-        except OSError as e:
+        except:
             print('NO  "keyboard", начало установки')
-            call('pip3 install keyboard', shell=True)
+            call('sudo python3 -m pip install keyboard', shell=True)
             call('clear')
 
         try:
             print('Проверка программы "tkinter"')
             find_module('tkinter')
             call('clear')
-        except OSError as e:
+        except:
             print('NO  "tkinter", начало установки')
             call('sudo apt-get install python3-tk', shell=True)
             call('clear')
@@ -157,4 +155,6 @@ class voice:
 if __name__ == '__main__':
     obj = voice()
     obj.install_utility()
+    from keyboard import add_hotkey, wait
+    from tkinter import Tk
     obj.hot_key()

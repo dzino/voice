@@ -19,3 +19,7 @@ Russian language.
     sudo python3 voice.py
     
 Activation: select the text, press `ctrl+c`. Scrit can work in the background
+
+## PS
+
+The machine must have Python3 and PIP installed.
